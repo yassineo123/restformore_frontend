@@ -17,3 +17,5 @@ De npm-commando's moeten vanuit `restformore_frontend` worden uitgevoerd: daar s
 Scan de QR-code met Expo Go op Android of met de camera op iOS. Zorg dat je telefoon en computer op hetzelfde netwerk zitten. Je kunt ook `npm run android` gebruiken voor een Android-emulator of `npm run ios` voor een iOS-simulator (op macOS).
 
 Pas `App.tsx` aan om het startscherm te wijzigen. Controleer de TypeScript-code met `npm run typecheck`.
+
+Een actueel overzicht van de aanwezige functionaliteiten staat in [FEATURES.md](./FEATURES.md).
