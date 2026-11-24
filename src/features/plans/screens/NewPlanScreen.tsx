@@ -19,7 +19,7 @@ export function NewPlanScreen({ theme, onBack, onSave, initialApps }: { theme: A
     if (problem) { setError(problem); return }
     onSave(draft)
   }
-  return <Page theme={theme} header={<Header theme={theme} title="Nieuw plan" onBack={onBack}/> }>
+  return <Page theme={theme} header={<Header theme={theme} particles title="Nieuw plan" onBack={onBack}/> }>
     <Field theme={theme} label="Naam van je plan" placeholder="Bijvoorbeeld Avondrust" value={name} onChangeText={setName} maxLength={80}/>
     <View style={ui.section}><Text style={[ui.label, { color: theme.ink }]}>Dagen</Text><View style={styles.days}>{[{ day: 1, label: 'ma' }, { day: 2, label: 'di' }, { day: 3, label: 'wo' }, { day: 4, label: 'do' }, { day: 5, label: 'vr' }, { day: 6, label: 'za' }, { day: 0, label: 'zo' }].map(item => <Chip key={item.day} theme={theme} label={item.label} compact selected={days.includes(item.day)} onPress={() => setDays(current => current.includes(item.day) ? current.filter(day => day !== item.day) : [...current, item.day])}/>)}</View></View>
     <View style={ui.section}><Text style={[ui.label, { color: theme.ink }]}>Tijd</Text><View style={styles.times}><View style={styles.time}><Field theme={theme} label="Van" inlineLabel value={start} onChangeText={setStart} placeholder="22:00" keyboardType="numbers-and-punctuation" maxLength={5}/></View><View style={styles.time}><Field theme={theme} label="Tot" inlineLabel value={end} onChangeText={setEnd} placeholder="06:00" keyboardType="numbers-and-punctuation" maxLength={5}/></View></View></View>

@@ -15,7 +15,7 @@ export function QuestionsScreen({ theme, initialAnswers, onBack, onComplete }: {
     if (index === 9) onComplete(answers)
     else setIndex(index + 1)
   }
-  return <Page theme={theme} header={<Header theme={theme} onBack={previous} minimumHeight={280}>
+  return <Page theme={theme} header={<Header theme={theme} particles onBack={previous} minimumHeight={280}>
     <View style={[ui.spread, { marginTop: 8 }]}><Text style={{ color: theme.ink, fontSize: 13 }}>Vraag {index + 1} van 10</Text><Text style={{ color: theme.ink, fontSize: 13 }}>Slaap en ritme</Text></View>
     <View accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: 10, now: index + 1 }} style={{ height: 6, backgroundColor: theme.active, borderRadius: 3, marginTop: 8 }}><View style={{ width: `${(index + 1) * 10}%`, height: 6, borderRadius: 3, backgroundColor: theme.primary }}/></View>
     <Text accessibilityRole="header" style={[ui.title, { color: theme.ink, marginTop: 24 }]}>*vraag* {index + 1}</Text>

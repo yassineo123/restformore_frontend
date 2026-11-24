@@ -12,7 +12,7 @@ export function RoutineScreen({ theme, plans, startedAt, onTab, onNewPlan }: { t
   const today = new Date()
   const isToday = date.toDateString() === today.toDateString()
   const matching = plansForDate(plans, date)
-  return <Page theme={theme} header={<Header theme={theme} title="Jouw Routine" eyebrow="Routine" curves>
+  return <Page theme={theme} header={<Header theme={theme} particles title="Jouw Routine" eyebrow="Routine" curves>
     <View style={[styles.badge, { backgroundColor: theme.active }]}><Text style={{ color: theme.ink, fontSize: 13, fontWeight: '700' }}>Jouw 14-daagse overzicht</Text></View>
     <View style={styles.calendar}>{Array.from({ length: 14 }, (_, i) => i + 1).map(value => <View key={value} style={[styles.dayCell, { minWidth: 44 * fontScale }]}><Pressable accessibilityRole="button" accessibilityLabel={`Dag ${value}`} accessibilityState={{ selected: day === value }} onPress={() => setDay(value)} style={({ pressed }) => [styles.day, { minWidth: 44 * fontScale, minHeight: 44 * fontScale, backgroundColor: day === value ? theme.accent : theme.active, opacity: pressed ? 0.7 : 1 }]}><Text style={{ color: day === value ? '#55361C' : theme.ink, fontSize: 15, fontWeight: '700' }}>{value}</Text></Pressable></View>)}</View>
   </Header>} bottom={<BottomNavigation theme={theme} selected="routine" onSelect={onTab}/>}>

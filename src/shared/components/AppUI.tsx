@@ -5,6 +5,7 @@ import { Bell, CalendarDays, ChevronLeft, ChevronRight, House, UserRound, type L
 import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg'
 import type { AppTheme } from '../theme/appTheme'
 import type { Tab } from '../models/app'
+import { AmbientParticles } from './AmbientParticles'
 
 export const ui = StyleSheet.create({
   title: { fontSize: 32, fontWeight: '400', fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif' },
@@ -34,10 +35,11 @@ export function Page({ theme, header, children, bottom, contentStyle }: PropsWit
   </KeyboardAvoidingView>
 }
 
-export function Header({ theme, title, eyebrow, onBack, children, tall = false, curves = false, transparent = false, minimumHeight }: PropsWithChildren<{ theme: AppTheme; title?: string; eyebrow?: string; onBack?: () => void; tall?: boolean; curves?: boolean; transparent?: boolean; minimumHeight?: number }>) {
+export function Header({ theme, title, eyebrow, onBack, children, tall = false, curves = false, transparent = false, minimumHeight, particles = false }: PropsWithChildren<{ theme: AppTheme; title?: string; eyebrow?: string; onBack?: () => void; tall?: boolean; curves?: boolean; transparent?: boolean; minimumHeight?: number; particles?: boolean }>) {
   const insets = useSafeAreaInsets()
   return <View style={{ paddingTop: insets.top + 18, paddingBottom: 46, minHeight: (minimumHeight ?? (tall ? 340 : 205)) + insets.top }}>
     {!transparent && <Sky theme={theme} curves={curves}/>}
+    {particles && <AmbientParticles theme={theme}/>}
     <View style={[styles.headerContent, { paddingLeft: 28 + insets.left, paddingRight: 28 + insets.right }]}>
       {onBack && <Pressable accessibilityRole="button" accessibilityLabel="Terug" onPress={onBack} style={[styles.back, { backgroundColor: theme.dark ? theme.active : '#FFFFFF99' }]}><ChevronLeft size={26} color={theme.ink}/></Pressable>}
       {eyebrow && <Text style={{ color: theme.ink, fontSize: 14, marginBottom: 8, marginTop: onBack ? 0 : 18 }}>{eyebrow}</Text>}
