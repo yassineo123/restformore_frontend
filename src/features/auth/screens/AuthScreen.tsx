@@ -10,7 +10,7 @@ type Props = { mode: 'login' | 'register'; theme: Theme; onBack: () => void; onS
 export function AuthScreen({ mode, theme, onBack, onSwitch }: Props) {
   const register = mode === 'register'
   const insets = useSafeAreaInsets()
-  const { height } = useWindowDimensions()
+  const { height, fontScale } = useWindowDimensions()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
@@ -31,7 +31,7 @@ export function AuthScreen({ mode, theme, onBack, onSwitch }: Props) {
   return <KeyboardAvoidingView style={[styles.root, { backgroundColor: theme.surface }]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
     <StatusBar barStyle="dark-content"/>
     <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} bounces={false}>
-      <View style={[styles.hero, { height: Math.max(220, Math.min(height * 0.39, 340)), paddingTop: insets.top + 14 }]}><Landscape theme={theme} sunrise={register}/><View style={styles.heroText}>
+      <View style={[styles.hero, { height: Math.max(220, Math.min(height * 0.39, 340), insets.top + 140 * fontScale), paddingTop: insets.top + 14 }]}><Landscape theme={theme} sunrise={register}/><View style={styles.heroText}>
         <Pressable accessibilityRole="button" accessibilityLabel="Terug naar welkom" onPress={onBack} style={[styles.back, { backgroundColor: '#FFFFFF99' }]}><Svg width={22} height={22} viewBox="0 0 24 24"><Path d="M15 4 7 12l8 8" stroke={theme.ink} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" fill="none"/></Svg></Pressable>
         <Text style={[styles.title, { color: theme.ink }]}>{register ? 'Registreren' : 'Login'}</Text><Text style={[styles.subtitle, { color: theme.ink }]}>{register ? 'Maak een account aan.' : 'Welkom terug.'}</Text>
       </View></View>
@@ -53,4 +53,4 @@ export function AuthScreen({ mode, theme, onBack, onSwitch }: Props) {
     </ScrollView>
   </KeyboardAvoidingView>
 }
-const styles = StyleSheet.create({ root: { flex: 1 }, hero: { overflow: 'hidden' }, heroText: { paddingHorizontal: 30 }, back: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }, title: { fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif', fontSize: 32 }, subtitle: { fontSize: 14, marginTop: 7 }, sheet: { flexGrow: 1, marginTop: -20, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 22, paddingTop: 30 }, label: { fontSize: 13, fontWeight: '700', marginBottom: 8 }, passwordLabel: { marginTop: 18 }, inputBox: { minHeight: 56, borderRadius: 20, borderWidth: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 19 }, input: { flex: 1, fontSize: 15, paddingVertical: 14 }, eye: { paddingLeft: 12 }, error: { fontSize: 12, marginTop: 6 }, forgot: { alignSelf: 'flex-end', paddingTop: 15, paddingBottom: 3 }, forgotText: { fontSize: 12, fontWeight: '700' }, notice: { padding: 12, borderRadius: 12, marginTop: 18, lineHeight: 19, fontSize: 13 }, switch: { paddingVertical: 32 } })
+const styles = StyleSheet.create({ root: { flex: 1 }, hero: { overflow: 'hidden' }, heroText: { width: '100%', maxWidth: 620, alignSelf: 'center', paddingHorizontal: 30 }, back: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }, title: { fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif', fontSize: 32 }, subtitle: { fontSize: 14, marginTop: 7 }, sheet: { flexGrow: 1, width: '100%', maxWidth: 620, alignSelf: 'center', marginTop: -20, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 22, paddingTop: 30 }, label: { fontSize: 13, fontWeight: '700', marginBottom: 8 }, passwordLabel: { marginTop: 18 }, inputBox: { minHeight: 56, borderRadius: 20, borderWidth: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 19 }, input: { flex: 1, fontSize: 15, paddingVertical: 14 }, eye: { minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }, error: { fontSize: 12, marginTop: 6 }, forgot: { alignSelf: 'flex-end', minHeight: 44, justifyContent: 'center' }, forgotText: { fontSize: 12, fontWeight: '700' }, notice: { padding: 12, borderRadius: 12, marginTop: 18, lineHeight: 19, fontSize: 13 }, switch: { paddingVertical: 32 } })
