@@ -28,15 +28,15 @@ export function QuestionsScreen({ theme, initialAnswers, onBack, onComplete }: {
     if (index === 9) onComplete(answers)
     else setIndex(index + 1)
   }
-  return <Page theme={theme} header={<Header theme={theme} particles onBack={previous} minimumHeight={280}>
+  return <Page theme={theme} header={<Header theme={theme} particles onBack={previous} minimumHeight={230}>
     <View style={[ui.spread, { marginTop: 8 }]}><Text style={{ color: theme.ink, fontSize: 13 }}>Vraag {index + 1} van 10</Text><Text style={{ color: theme.ink, fontSize: 13 }}>Slaap en ritme</Text></View>
     <View accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: 10, now: index + 1 }} style={{ height: 6, backgroundColor: theme.active, borderRadius: 3, marginTop: 8 }}><View style={{ width: `${(index + 1) * 10}%`, height: 6, borderRadius: 3, backgroundColor: theme.primary }}/></View>
-    <Text accessibilityRole="header" style={[ui.title, { color: theme.ink, marginTop: 24 }]}>Slaap en ritme</Text>
+    <Text accessibilityRole="header" style={[ui.title, { color: theme.ink, marginTop: 14, fontSize: 29 }]}>Slaap en ritme</Text>
   </Header>}>
-    <Text style={[ui.body, { color: theme.muted, marginBottom: 18, marginHorizontal: 8 }]}>{questionnaire[index].subtitle}</Text>
-    <Text style={[ui.heading, { color: theme.ink, marginHorizontal: 8, marginBottom: 18 }]}>{questionnaire[index].title}</Text>
-    <View accessibilityRole="radiogroup" accessibilityLabel={`Antwoorden voor vraag ${index + 1}`} style={{ gap: 12 }}>{questionnaire[index].answers.map((answer, answerIndex) => <Pressable key={answer} accessibilityRole="radio" accessibilityState={{ checked: answers[index] === answerIndex }} onPress={() => { setAnswers(current => { const nextAnswers = [...current]; nextAnswers[index] = answerIndex; return nextAnswers }); setShowError(false) }} style={{ minHeight: 66, paddingHorizontal: 22, paddingVertical: 18, borderRadius: 24, borderWidth: answers[index] === answerIndex ? 2 : 1, borderColor: answers[index] === answerIndex ? theme.ink : theme.border, backgroundColor: answers[index] === answerIndex ? theme.soft : theme.card, flexDirection: 'row', alignItems: 'center', gap: 12 }}><Text style={{ flex: 1, color: theme.ink, fontSize: 16, fontWeight: '700' }}>{answer}</Text>{answers[index] === answerIndex ? <Check color={theme.ink} size={24}/> : <Circle color={theme.border} size={24}/>}</Pressable>)}</View>
+    <Text style={[ui.body, { color: theme.muted, marginBottom: 10, marginHorizontal: 8, lineHeight: 20 }]}>{questionnaire[index].subtitle}</Text>
+    <Text style={[ui.heading, { color: theme.ink, marginHorizontal: 8, marginBottom: 12, fontSize: 19, lineHeight: 24 }]}>{questionnaire[index].title}</Text>
+    <View accessibilityRole="radiogroup" accessibilityLabel={`Antwoorden voor vraag ${index + 1}`} style={{ gap: 8 }}>{questionnaire[index].answers.map((answer, answerIndex) => <Pressable key={answer} accessibilityRole="radio" accessibilityState={{ checked: answers[index] === answerIndex }} onPress={() => { setAnswers(current => { const nextAnswers = [...current]; nextAnswers[index] = answerIndex; return nextAnswers }); setShowError(false) }} style={{ minHeight: 56, paddingHorizontal: 18, paddingVertical: 13, borderRadius: 20, borderWidth: answers[index] === answerIndex ? 2 : 1, borderColor: answers[index] === answerIndex ? theme.primary : theme.border, backgroundColor: answers[index] === answerIndex ? theme.soft : theme.card, flexDirection: 'row', alignItems: 'center', gap: 10 }}><Text style={{ flex: 1, color: theme.ink, fontSize: 15, fontWeight: '700' }}>{answer}</Text>{answers[index] === answerIndex ? <Check color={theme.primary} size={22}/> : <Circle color={theme.border} size={22}/>}</Pressable>)}</View>
     {showError && <Notice theme={theme}>Kies een antwoord om verder te gaan.</Notice>}
-    <View style={ui.spacer}/><View style={ui.row}><Button theme={theme} title="Vorige" onPress={previous} secondary/><View style={{ flex: 1 }}><Button theme={theme} title={index === 9 ? 'Afronden' : 'Volgende'} onPress={next}/></View></View>
+    <View style={ui.spacer}/><View style={[ui.row, { marginBottom: 32 }]}><Button theme={theme} title="Vorige" onPress={previous} secondary/><View style={{ flex: 1 }}><Button theme={theme} title={index === 9 ? 'Afronden' : 'Volgende'} onPress={next}/></View></View>
   </Page>
 }
