@@ -1,5 +1,5 @@
 export type Tab = 'home' | 'routine' | 'notifications' | 'profile'
-export type Route = Tab | 'intro' | 'questions' | 'settings' | 'newPlan' | 'about' | 'editProfile' | 'feedback'
+export type Route = Tab | 'intro' | 'questions' | 'guidedPlan' | 'settings' | 'newPlan' | 'about' | 'editProfile' | 'feedback'
 export type Profile = { name: string; email: string }
 export type Plan = {
   id: string

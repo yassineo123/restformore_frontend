@@ -14,6 +14,7 @@ import { SettingsScreen } from './src/features/settings/screens/SettingsScreen'
 import { FeedbackScreen } from './src/features/feedback/screens/FeedbackScreen'
 import { IntroScreen } from './src/features/onboarding/screens/IntroScreen'
 import { QuestionsScreen } from './src/features/onboarding/screens/QuestionsScreen'
+import { GuidedPlanScreen } from './src/features/onboarding/screens/GuidedPlanScreen'
 import { BottomNavigation, Header, Page, ui } from './src/shared/components/AppUI'
 import { colors } from './src/shared/theme/colors'
 import { appThemes, type Appearance } from './src/shared/theme/appTheme'
@@ -32,11 +33,20 @@ export default function App() {
   const [read, setRead] = useState<string[]>([])
   const [selectedApps, setSelectedApps] = useState(['Instagram', 'TikTok', 'YouTube'])
   const [answers, setAnswers] = useState<number[]>([])
+  const [questionnaireCompleted, setQuestionnaireCompleted] = useState(false)
+  const [guidedPlanFinished, setGuidedPlanFinished] = useState(false)
   const [startedAt] = useState(() => Date.now())
   const [message, setMessage] = useState('')
   const route = routes[routes.length - 1]
   const navigate = (next: Route) => { setMessage(''); setRoutes(current => [...current, next]) }
-  const selectTab = (tab: Tab) => { setMessage(''); setRoutes([tab]) }
+  const selectTab = (tab: Tab) => {
+    setMessage('')
+    if (tab === 'routine' && !guidedPlanFinished) {
+      setRoutes([questionnaireCompleted ? 'guidedPlan' : 'intro'])
+      return
+    }
+    setRoutes([tab])
+  }
   const back = useCallback(() => {
     if (screen !== 'app') { setScreen('welcome'); return }
     if (routes.length > 1) setRoutes(current => current.slice(0, -1))
@@ -66,7 +76,8 @@ export default function App() {
     case 'about': content = <AboutScreen theme={theme} onBack={back}/>; break
     case 'feedback': content = <FeedbackScreen theme={theme} onBack={back}/>; break
     case 'intro': content = <IntroScreen theme={theme} onBack={back} onLater={() => selectTab('home')} onNext={() => navigate('questions')}/>; break
-    case 'questions': content = <QuestionsScreen theme={theme} initialAnswers={answers} onBack={back} onComplete={value => { setAnswers(value); setMessage('Je antwoorden zijn tijdelijk bewaard. Maak zelf een plan met de plusknop.'); setRoutes(['home']) }}/>; break
+    case 'questions': content = <QuestionsScreen theme={theme} initialAnswers={answers} onBack={back} onComplete={value => { setAnswers(value); setQuestionnaireCompleted(true); setRoutes(['guidedPlan']) }}/>; break
+    case 'guidedPlan': content = <GuidedPlanScreen theme={theme} onFinish={() => { setGuidedPlanFinished(true); setRoutes(['routine']) }}/>; break
   }
   return <SafeAreaProvider>{content}</SafeAreaProvider>
 }
