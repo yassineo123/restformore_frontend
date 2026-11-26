@@ -27,7 +27,7 @@ export function Page({ theme, header, children, bottom, contentStyle }: PropsWit
   const insets = useSafeAreaInsets()
   return <KeyboardAvoidingView style={{ flex: 1, backgroundColor: theme.surface }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
     <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'}/>
-    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1 }} bounces={false}>
+    <ScrollView style={{ backgroundColor: theme.surface }} keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1, backgroundColor: theme.surface }} bounces={false}>
       {header}
       <View style={[styles.sheet, { backgroundColor: theme.surface, paddingLeft: 22 + insets.left, paddingRight: 22 + insets.right, paddingBottom: bottom ? 22 : Math.max(insets.bottom, 24) }]}><View style={[styles.content, contentStyle]}>{children}</View></View>
     </ScrollView>
