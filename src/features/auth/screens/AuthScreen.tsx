@@ -7,6 +7,23 @@ import { PrimaryButton } from '../components/PrimaryButton'
 import type { Theme } from '../../../shared/theme/colors'
 
 type Props = { mode: 'login' | 'register'; theme: Theme; onBack: () => void; onSwitch: () => void }
+
+function FieldError({ message, visible, color, alternateMessage }: { message: string; visible: boolean; color: string; alternateMessage?: string }) {
+  const showMessage = visible && !alternateMessage
+
+  return <View style={styles.errorSpace}>
+    <Text
+      accessibilityRole={showMessage ? 'alert' : undefined}
+      accessibilityElementsHidden={!showMessage}
+      importantForAccessibility={showMessage ? 'auto' : 'no-hide-descendants'}
+      style={[styles.error, { color }, !showMessage && styles.hiddenError]}
+    >
+      {message}
+    </Text>
+    {visible && alternateMessage && <Text accessibilityRole="alert" style={[styles.error, styles.alternateError, { color }]}>{alternateMessage}</Text>}
+  </View>
+}
+
 export function AuthScreen({ mode, theme, onBack, onSwitch }: Props) {
   const register = mode === 'register'
   const insets = useSafeAreaInsets()
@@ -38,13 +55,19 @@ export function AuthScreen({ mode, theme, onBack, onSwitch }: Props) {
       <View style={[styles.sheet, { backgroundColor: theme.surface, paddingBottom: Math.max(insets.bottom, 24) }]}>
         <Text style={[styles.label, { color: theme.ink }]}>E-mailadres</Text>
         <View style={[styles.inputBox, { backgroundColor: theme.card, borderColor: emailInvalid ? theme.error : theme.border }]}><TextInput accessibilityLabel="E-mailadres" autoCapitalize="none" autoCorrect={false} autoComplete="email" keyboardType="email-address" returnKeyType="next" onSubmitEditing={() => passwordRef.current?.focus()} value={email} onChangeText={value => { setEmail(value); setNotice('') }} placeholder="naam@email.nl" placeholderTextColor={theme.muted} style={[styles.input, { color: theme.ink }]}/></View>
-        {emailInvalid && <Text accessibilityRole="alert" style={[styles.error, { color: theme.error }]}>Vul een geldig e-mailadres in.</Text>}
+        <FieldError message="Vul een geldig e-mailadres in." visible={emailInvalid} color={theme.error}/>
         <Text style={[styles.label, styles.passwordLabel, { color: theme.ink }]}>Wachtwoord</Text>
         <View style={[styles.inputBox, { backgroundColor: theme.card, borderColor: passwordInvalid ? theme.error : theme.border }]}><TextInput ref={passwordRef} accessibilityLabel="Wachtwoord" autoCapitalize="none" autoCorrect={false} autoComplete={register ? 'new-password' : 'current-password'} secureTextEntry={!visible} returnKeyType={register ? 'next' : 'done'} onSubmitEditing={() => register ? confirmationRef.current?.focus() : submit()} value={password} onChangeText={value => { setPassword(value); setNotice('') }} placeholder={register ? 'Minimaal 8 tekens' : 'Je wachtwoord'} placeholderTextColor={theme.muted} style={[styles.input, { color: theme.ink }]}/><Pressable accessibilityRole="button" accessibilityLabel={visible ? 'Verberg wachtwoord' : 'Toon wachtwoord'} onPress={() => setVisible(!visible)} hitSlop={12} style={styles.eye}><Svg width={23} height={23} viewBox="0 0 24 24"><Path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" stroke={theme.muted} strokeWidth={1.8} fill="none"/><Circle cx={12} cy={12} r={2.6} stroke={theme.muted} strokeWidth={1.8} fill="none"/>{visible && <Path d="M4 4l16 16" stroke={theme.muted} strokeWidth={1.8}/>}</Svg></Pressable></View>
-        {passwordInvalid && <Text accessibilityRole="alert" style={[styles.error, { color: theme.error }]}>{register ? 'Gebruik minimaal 8 tekens.' : 'Vul je wachtwoord in.'}</Text>}
+        <FieldError message={register ? 'Gebruik minimaal 8 tekens.' : 'Vul je wachtwoord in.'} visible={passwordInvalid} color={theme.error}/>
         {register && <><Text style={[styles.label, styles.passwordLabel, { color: theme.ink }]}>Herhaal wachtwoord</Text>
           <View style={[styles.inputBox, { backgroundColor: theme.card, borderColor: confirmationInvalid ? theme.error : theme.border }]}><TextInput ref={confirmationRef} accessibilityLabel="Herhaal wachtwoord" autoCapitalize="none" autoCorrect={false} autoComplete="new-password" secureTextEntry={!confirmationVisible} returnKeyType="done" onSubmitEditing={submit} value={confirmation} onChangeText={value => { setConfirmation(value); setNotice('') }} placeholder="Herhaal je wachtwoord" placeholderTextColor={theme.muted} style={[styles.input, { color: theme.ink }]}/><Pressable accessibilityRole="button" accessibilityLabel={confirmationVisible ? 'Verberg herhaald wachtwoord' : 'Toon herhaald wachtwoord'} onPress={() => setConfirmationVisible(!confirmationVisible)} hitSlop={12} style={styles.eye}><Svg width={23} height={23} viewBox="0 0 24 24"><Path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" stroke={theme.muted} strokeWidth={1.8} fill="none"/><Circle cx={12} cy={12} r={2.6} stroke={theme.muted} strokeWidth={1.8} fill="none"/>{confirmationVisible && <Path d="M4 4l16 16" stroke={theme.muted} strokeWidth={1.8}/>}</Svg></Pressable></View>
-          {confirmationInvalid && <Text accessibilityRole="alert" style={[styles.error, { color: theme.error }]}>{confirmation ? 'De wachtwoorden komen niet overeen.' : 'Herhaal je wachtwoord.'}</Text>}</>}
+          <FieldError
+            message="De wachtwoorden komen niet overeen."
+            visible={confirmationInvalid}
+            color={theme.error}
+            alternateMessage={confirmation ? undefined : 'Herhaal je wachtwoord.'}
+          />
+        </>}
         {!register && <Pressable accessibilityRole="button" onPress={() => setNotice('Wachtwoord herstellen is nog niet beschikbaar.')} style={styles.forgot}><Text style={[styles.forgotText, { color: theme.ink }]}>Wachtwoord vergeten?</Text></Pressable>}
         {notice !== '' && <Text accessibilityRole="alert" style={[styles.notice, { color: theme.ink, backgroundColor: '#F6E0CD' }]}>{notice}</Text>}
         <View style={{ marginTop: register ? 38 : 18 }}><PrimaryButton title="Verder" theme={theme} onPress={submit}/></View>
@@ -53,4 +76,11 @@ export function AuthScreen({ mode, theme, onBack, onSwitch }: Props) {
     </ScrollView>
   </KeyboardAvoidingView>
 }
-const styles = StyleSheet.create({ root: { flex: 1 }, hero: { overflow: 'hidden' }, heroText: { width: '100%', maxWidth: 620, alignSelf: 'center', paddingHorizontal: 30 }, back: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }, title: { fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif', fontSize: 32 }, subtitle: { fontSize: 14, marginTop: 7 }, sheet: { flexGrow: 1, width: '100%', maxWidth: 620, alignSelf: 'center', marginTop: -20, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 22, paddingTop: 30 }, label: { fontSize: 13, fontWeight: '700', marginBottom: 8 }, passwordLabel: { marginTop: 18 }, inputBox: { minHeight: 56, borderRadius: 20, borderWidth: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 19 }, input: { flex: 1, fontSize: 15, paddingVertical: 14 }, eye: { minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }, error: { fontSize: 12, marginTop: 6 }, forgot: { alignSelf: 'flex-end', minHeight: 44, justifyContent: 'center' }, forgotText: { fontSize: 12, fontWeight: '700' }, notice: { padding: 12, borderRadius: 12, marginTop: 18, lineHeight: 19, fontSize: 13 }, switch: { paddingVertical: 32 } })
+const styles = StyleSheet.create({
+  root: { flex: 1 }, hero: { overflow: 'hidden' }, heroText: { width: '100%', maxWidth: 620, alignSelf: 'center', paddingHorizontal: 30 }, back: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }, title: { fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif', fontSize: 32 }, subtitle: { fontSize: 14, marginTop: 7 }, sheet: { flexGrow: 1, width: '100%', maxWidth: 620, alignSelf: 'center', marginTop: -20, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 22, paddingTop: 30 }, label: { fontSize: 13, fontWeight: '700', marginBottom: 8 }, passwordLabel: { marginTop: 6 }, inputBox: { minHeight: 56, borderRadius: 20, borderWidth: 1, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 19 }, input: { flex: 1, fontSize: 15, paddingVertical: 14 }, eye: { minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' },
+  errorSpace: { marginTop: 6 },
+  error: { fontSize: 12 },
+  hiddenError: { opacity: 0 },
+  alternateError: { position: 'absolute', top: 0, left: 0, right: 0 },
+  forgot: { alignSelf: 'flex-end', minHeight: 44, justifyContent: 'center' }, forgotText: { fontSize: 12, fontWeight: '700' }, notice: { padding: 12, borderRadius: 12, marginTop: 18, lineHeight: 19, fontSize: 13 }, switch: { paddingVertical: 32 },
+})
